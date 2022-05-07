@@ -2,7 +2,7 @@
 
 let
   nixpkgs = builtins.fetchTarball "https://github.com/NixOS/nixpkgs/archive/25e036ff5d2c9cd9382bbb1bbe0d929950c1449f.tar.gz";
-  overlay = builtins.fetchTarball "https://github.com/markuskowa/NixOS-QChem/archive/d9c72e7b6c1f63c2a67fc28e94450d0b41e7e793.tar.gz";
+  overlay = builtins.fetchTarball "https://github.com/markuskowa/NixOS-QChem/archive/a236b5156f74f5e50f419df3320fd1e057fdc756.tar.gz";
 
   pkgs = import nixpkgs {
     config = {
@@ -12,7 +12,7 @@ let
       };
     };
     overlays = [
-      (self: super: { cudatoolkit = super.cudatoolkit_11; })
+      (import "${overlay}/overlays/cuda.nix")
       (import "${overlay}/overlay.nix")
     ];
   };
