@@ -32,7 +32,7 @@ grep -v HOH molecules/10aki.pdb > 1AKI_clean.pdb
 # generate topology
 gmx pdb2gmx -f 1AKI_clean.pdb -o 1AKI_processed.gro -water tip4p
 # choose 1 in prompt
-# modify topology file from tip4p to tip4pew
+# modify topology file from tip4p to tip4p2005
 # here I deleted the restrains in the topology, kept a single itp file and added the total number by hand
 
 # new box
