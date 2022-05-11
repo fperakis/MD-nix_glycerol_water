@@ -64,7 +64,7 @@ gmx grompp -f mdp/min.mdp -c glycerol_ions.gro -p topol.top -o em.tpr
 sbatch slurm/cuda 
 
 #analyse
-gmx energy -f em.edr -o em_potential.xvg
+gmx energy -f em.edr -o analysis/em_potential.xvg
 
 # NVT
 gmx grompp -f mdp/nvt.mdp -c em.gro -r em.gro -p topol.top -o nvt.tpr
@@ -77,7 +77,7 @@ gmx grompp -f mdp/npt.mdp -c nvt.gro -t nvt.cpt -p topol.top -o npt.tpr
 sbatch slurm/cuda
 
 #analyse
-gmx energy -f npt.edr -o npt_volume.xvg
+gmx energy -f npt.edr -o analysis/npt_volume.xvg
 gmx trjconv -s npt.tpr -f npt.trr -o npt_noPBC.trr -pbc mol
 
 # MD
@@ -86,7 +86,7 @@ gmx grompp -f mdp/md.mdp -c npt.gro -t npt.cpt -p topol.top -o md_0_1.tpr
 sbatch slurm/cuda
 
 # analyse
-gmx energy -f md_0_1.edr -o md_density.xvg
+gmx energy -f md_0_1.edr -o analysis/md_density.xvg
 
 # make molecules whole
 gmx trjconv -s md_0_1.tpr -f md_0_1.xtc -o md_noPBC.xtc -pbc mol 
