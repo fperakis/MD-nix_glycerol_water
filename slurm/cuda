@@ -32,4 +32,8 @@ fi
 # to avoid complaints from GROMACS
 export OMP_NUM_THREADS=$ntomp
 
+# for single task
+# gmx mdrun -ntomp $ntomp -deffnm em
+
+# for multi task
 mpirun gmx_mpi mdrun -ntomp $ntomp -deffnm md_0_1
