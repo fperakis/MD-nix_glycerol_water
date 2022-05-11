@@ -47,7 +47,7 @@ gmx insert-molecules -f 1AKI_bigbox.gro -ci molecules/glycerol.pdb -nmol 4600 -o
 ; Include glycerol topology
 #include "molecules/glycerol.itp"
 # under [molecules] add
-glycerol            4600
+GLYC            4600
 
 # solvate
 gmx solvate -cp glycerol_box -cs tip4p -o glycerol_solv.gro -p topol.top -maxsol 15400
