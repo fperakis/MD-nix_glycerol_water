@@ -1,5 +1,5 @@
 #!/usr/bin/env nix-shell
-#!nix-shell -i bash /cfs/home/fpera/gmx_simulations/14_10aki_tip4p2005_glyc/MD-nix_lyso_glyc_tip4p2005/nix_files/cuda.nix
+#!nix-shell -i bash path_to_nix_files/cuda.nix
 
 # Number of tasks
 #SBATCH -n1
