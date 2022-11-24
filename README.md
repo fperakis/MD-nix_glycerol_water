@@ -1,5 +1,4 @@
-# MD-nix_lyso
-MD simulations using gromacs at Fysikum HPC. 
+### MD simulations using gromacs at Fysikum HPC. 
 https://it.fysik.su.se/hpc/
 
 The simulation includes a 3.2%mol water/glycerol solution. 
