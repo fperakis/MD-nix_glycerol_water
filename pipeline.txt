@@ -1,4 +1,4 @@
-# Simulating 10 lysozymes in a glycerol water mixture
+# Simulating a glycerol water mixture
 
 -------------------------
 
@@ -15,70 +15,41 @@ https://www.swissparam.ch/
 # got the CHARMM foreciled files
 http://mackerell.umaryland.edu/charmm_ff.shtml
 
-# mdp file parameter sof CHARMMS
-https://manual.gromacs.org/documentation/2018/user-guide/force-fields.html
-
-# extend protein crystal in pymol
-# symexp name_for_new_objects,asymmetric_name,(asymmetric_name),distance
-symexp sym,1aki,(1aki),12
-
 ------------------------
 #activate nix
 nix-shell -p qchem-unstable.gromacs
 
-# remove water molecules from pdb
-grep -v HOH molecules/10aki.pdb > 1AKI_clean.pdb
-
-# generate topology
-gmx pdb2gmx -f 1AKI_clean.pdb -o 1AKI_processed.gro -water tip4p
-# choose 1 in prompt
-# modify topology file from tip4p to tip4p2005
-# here I deleted the restrains in the topology, kept a single itp file and added the total number by hand
-
-# new box
-gmx editconf -f 1AKI_processed.gro -o 1AKI_bigbox.gro -c -d 1.0 -bt cubic
-
-# add glycerol 
-# for 23 mol% means 460 glycerols in 1540 waters per protein (2000 molecules)
-# for 10 proteins that is 4600 glycerols and 15400 waters (20'000 molecules)
-gmx insert-molecules -f 1AKI_bigbox.gro -ci molecules/glycerol.pdb -nmol 4600 -o glycerol_box.gro
-
-# modify topology file to add glycerol topology right after the force field
-; Include glycerol topology
-#include "molecules/glycerol.itp"
-# under [molecules] add
-GLYC            4600
+# make box
+gmx insert-molecules -ci mol/glyc.pdb -nmol 230 -box 5 5 5 -o glycerol_box.gro
 
 # solvate
-gmx solvate -cp glycerol_box -cs tip4p -o glycerol_solv.gro -p topol.top -maxsol 15400
+gmx solvate -cp glycerol_box -cs tip4p -o glycerol_solv.gro -p topol.top -maxsol 770
+
 (after this step check topology file - may need to add a new line after SOL)
 
-# add ions
-gmx grompp -f mdp/ions.mdp -c glycerol_solv.gro -p topol.top -o ions.tpr
-gmx genion -s ions.tpr -o glycerol_ions.gro -p topol.top -pname NA -nname CLA -neutral -rmin 0.2
-# choose to replace SOL in the prompt
-
 # prepare minimisation
-gmx grompp -f mdp/min.mdp -c glycerol_ions.gro -p topol.top -o em.tpr 
+gmx grompp -f mdp/min.mdp -c glycerol_solv.gro -p topol.top -o em.tpr 
 # modify slurm_cuda for em
 sbatch slurm/cuda 
 
 #analyse
-gmx energy -f em.edr -o analysis/em_potential.xvg
+gmx energy -f em.edr -o em_potential.xvg
 
 # NVT
 gmx grompp -f mdp/nvt.mdp -c em.gro -r em.gro -p topol.top -o nvt.tpr
 # modify slurm_cuda for NVT
 sbatch slurm/cuda
 
+#analyse
+gmx energy -f nvt.edr -o nvt_temperature.xvg
+
 # NPT
-gmx grompp -f mdp/npt.mdp -c nvt.gro -t nvt.cpt -p topol.top -o npt.tpr
+gmx grompp -f mdp/npt.mdp -c nvt.gro -r nvt.gro -t nvt.cpt -p topol.top -o npt.tpr
 # modify slurm_cuda for NPT
 sbatch slurm/cuda
 
 #analyse
-gmx energy -f npt.edr -o analysis/npt_volume.xvg
-gmx trjconv -s npt.tpr -f npt.trr -o npt_noPBC.trr -pbc mol
+gmx energy -f npt.edr -o npt_volume.xvg
 
 # MD
 gmx grompp -f mdp/md.mdp -c npt.gro -t npt.cpt -p topol.top -o md_0_1.tpr
@@ -86,36 +57,14 @@ gmx grompp -f mdp/md.mdp -c npt.gro -t npt.cpt -p topol.top -o md_0_1.tpr
 sbatch slurm/cuda
 
 # analyse
-gmx energy -f md_0_1.edr -o analysis/md_density.xvg
+gmx energy -f md_0_1.edr -o md_density.xvg
 
 # make molecules whole
 gmx trjconv -s md_0_1.tpr -f md_0_1.xtc -o md_noPBC.xtc -pbc mol 
 
 # extend simulation (by 100ns)
 gmx convert-tpr -s md_0_1.tpr -extend 100000 -o md_0_1.tpr
-sbatch slurm/slurm_cuda_
-#gmx mdrun -s md_0_1.tpr -cpi md_0_1.cpt -deffnm md_0_1
+sbatch slurm/slurm_cuda_continue
 
----------------
-calculate saxs
+------------------------
 
-# make index file with non-dummy atoms
-gmx select -s md_0_1.gro -f md_0_1.xtc -on md_noMW.ndx -xvg none -select "all and not name MW"
-
-# dump a single frame
-gmx trjconv -f md_0_1.xtc -s md_0_1.tpr -dump 100 -o md_frame.pdb -n md_noMW.ndx -pbc atom -center
-
-# remove hydrogens
-grep -v '        H' md_frame.pdb > md_noH.pdb 
-
-# calculate saxs
-#gmx saxs -f md_frame.pdb -s md_frame.pdb -sq saxs2.xvg -energy 52.25
-gmx saxs --s md_0_1.gro -f md_0_1.xtc -n md_noMW.ndx -sq saxs2.xvg -energy 52.25
-
------------------
-
-# calculate RDF
-gmx rdf -f md_noPBC.xtc -s md_0_1.tpr -selrpos whole_mol_com -seltype whole_mol_com -b 10000 -e 200000 -bin 0.2 -rmax 10 -o rdf_com.xvg -norm no
-
-# calculate pairdistances
-gmx pairdist -f md_noPBC.xtc -s md_0_1.tpr  -b 100000 -e 110000 -selrpos whole_mol_com -seltype whole_mol_com -o dist_com.xvg -cutoff 100 -type max
