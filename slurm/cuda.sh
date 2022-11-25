@@ -2,15 +2,15 @@
 #!nix-shell -i bash path_to_nix_files/cuda.nix
 
 # Number of tasks
-#SBATCH -n24
+#SBATCH -n 24
 
 # Number of threads per task
-#SBATCH -c1
+#SBATCH -c 1
 
 # requested number of GPUs
 #SBATCH --gres gpu:a100:4
-#SBATCH -pampere
-#SBATCH -Jgromacs
+#SBATCH -p ampere
+#SBATCH -J gromacs
 #SBATCH -t2-00:00  # time limit: (D-HH:MM) 
 
 # Adjust line #2 to the absolute path of your cuda.nix file.

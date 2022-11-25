@@ -1,9 +1,9 @@
 #!/usr/bin/env nix-shell
 #!nix-shell -i bash /cfs/home/fpera/gmx_simulations/15_water_glyc/MD-nix_glycerol_water/nix_files/cpu.nix
 #
-#SBATCH -n64
-#SBATCH -pcops
-#SBATCH -Jgromacs
+#SBATCH -n 64
+#SBATCH -p cops
+#SBATCH -J gromacs
 #SBATCH -c 2
 #
 #nix-sdist `which gmx_mpi`
