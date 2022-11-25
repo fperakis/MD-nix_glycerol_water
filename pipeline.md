@@ -36,24 +36,24 @@ gmx solvate -cp glycerol_box -cs tip4p -o glycerol_solv.gro -p topol.top -maxsol
 
 ### Equilibrate energy, NVT, NPT
 
-> Energy minimisation: modify `slurm_cuda` for em, prepare and submit em, analyse results
+> Energy minimisation - preprocess, run and analyse results
  ```bash
 gmx grompp -f mdp/min.mdp -c glycerol_solv.gro -p topol.top -o em.tpr 
-sbatch slurm/cuda 
+sbatch slurm/cuda.sh em 
 gmx energy -f em.edr -o em_potential.xvg
  ```
  
-> NVT - modify `slurm_cuda` for NVT, analyse results
+> NVT - preprocess, run and analyse results
  ```bash
 gmx grompp -f mdp/nvt.mdp -c em.gro -r em.gro -p topol.top -o nvt.tpr
 gmx energy -f nvt.edr -o nvt_temperature.xvg
-sbatch slurm/cuda
+sbatch slurm/cuda.sh nvt
  ```
 
-> NPT - modify `slurm_cuda` for NPT, analyse results
+> NPT - preprocess, run and analyse results
 ```bash
 gmx grompp -f mdp/npt.mdp -c nvt.gro -r nvt.gro -t nvt.cpt -p topol.top -o npt.tpr
-sbatch slurm/cuda
+sbatch slurm/cuda.sh npt
 gmx energy -f npt.edr -o npt_volume.xvg
  ```
 
@@ -61,10 +61,10 @@ gmx energy -f npt.edr -o npt_volume.xvg
 
 ### Run MD
 
-> MD - modify `slurm_cuda` for MD, analyse results, make molecules whole
+> MD - preprocess, run and analyse results, make molecules whole
 ```bash
 gmx grompp -f mdp/md.mdp -c npt.gro -t npt.cpt -p topol.top -o md_0_1.tpr
-sbatch slurm/cuda
+sbatch slurm/cuda.sh md_0_1
 gmx energy -f md_0_1.edr -o md_density.xvg
 gmx trjconv -s md_0_1.tpr -f md_0_1.xtc -o md_noPBC.xtc -pbc mol 
  ```
