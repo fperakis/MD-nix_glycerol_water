@@ -39,7 +39,7 @@ $ gmx -version
 
 submit job on cluster
 ```bash
-$ sbatch slurm/cuda
+$ sbatch slurm/cuda md_0_1
 ```
 check status
 ```bash
