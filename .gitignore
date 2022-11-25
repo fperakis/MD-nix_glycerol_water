@@ -1,5 +1,8 @@
 # Jupyter Notebook
 .ipynb_checkpoints
 
-# output files
+# bash jobs output files
 .out
+
+# md files
+mdf/*
