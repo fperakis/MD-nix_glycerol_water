@@ -1,4 +1,4 @@
-### MD simulations using gromacs at Fysikum HPC. 
+# MD simulations using gromacs at Fysikum HPC. 
 https://it.fysik.su.se/hpc/
 
 The simulation includes a 3.2%mol water/glycerol solution. 
@@ -39,7 +39,7 @@ $ gmx -version
 
 submit job on cluster
 ```bash
-$ sbatch slurm/cuda
+$ sbatch slurm/cuda md_0_1
 ```
 check status
 ```bash
