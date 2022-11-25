@@ -25,7 +25,7 @@ nix-shell -p qchem-unstable.gromacs
  
 > Make simulation box: insert glycerols, solvate (after this step check topology file - may need to add a new line after SOL)
  ```bash
-gmx insert-molecules -ci mol/glyc.pdb -nmol 320 -box 10 10 10 -o glycerol_box.gro
+gmx insert-molecules -ci molecules/glycerol.pdb -nmol 320 -box 10 10 10 -o glycerol_box.gro
 gmx solvate -cp glycerol_box -cs tip4p -o glycerol_solv.gro -p topol.top -maxsol 9680
  ```
 
