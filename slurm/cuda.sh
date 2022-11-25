@@ -36,4 +36,4 @@ export OMP_NUM_THREADS=$ntomp
 # gmx mdrun -ntomp $ntomp -deffnm em
 
 # for multi task
-mpirun gmx_mpi mdrun -ntomp $ntomp -deffnm md_0_1
+mpirun gmx_mpi mdrun -ntomp $ntomp -deffnm $1
