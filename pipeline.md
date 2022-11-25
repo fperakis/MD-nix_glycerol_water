@@ -42,7 +42,7 @@ glycerol
 
 [ molecules ]
 ; Compound        #mols
-glycerol         8
+glycerol         320
 
  ```
 
