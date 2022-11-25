@@ -24,7 +24,7 @@ nix-shell -p qchem-unstable.gromacs
  ```
  
  
-> make topology file (topol.top)
+> make topology file (mdf/topol.top)
  ```bash
 
 ; Include forcefield parameters
@@ -49,8 +49,8 @@ glycerol         320
  
 > Make simulation box: insert glycerols, solvate (after this step check topology file - may need to add a new line after SOL)
  ```bash
-gmx insert-molecules -ci molecules/glycerol.pdb -nmol 320 -box 10 10 10 -o glycerol_box.gro
-gmx solvate -cp glycerol_box -cs tip4p -o glycerol_solv.gro -p topol.top -maxsol 9680
+gmx insert-molecules -ci molecules/glycerol.pdb -nmol 320 -box 10 10 10 -o mdf/glycerol_box.gro
+gmx solvate -cp mdf/glycerol_box -cs tip4p -o mdf/glycerol_solv.gro -p mdf/topol.top -maxsol 9680
  ```
 
 
@@ -62,7 +62,7 @@ gmx solvate -cp glycerol_box -cs tip4p -o glycerol_solv.gro -p topol.top -maxsol
 
 > Energy minimisation - preprocess, run and analyse results
  ```bash
-# gmx grompp -f mdp/min.mdp -c glycerol_solv.gro -p topol.top -o em.tpr 
+# gmx grompp -f mdp/min.mdp -c mdf/glycerol_solv.gro -p mdf/topol.top -o mdf/em.tpr 
 sbatch slurm/cuda_gromp.sh mdp/min.mdp glycerol_solv.gro em.tpr 
 sbatch slurm/cuda.sh em 
 gmx energy -f em.edr -o em_potential.xvg
