@@ -21,5 +21,4 @@ fi
 # # to avoid complaints from GROMACS
  export OMP_NUM_THREADS=$ntomp
 
-echo ' mpirun gmx_mpi mdrun -ntomp $ntomp -deffnm' $1
-#mpirun gmx_mpi mdrun -ntomp $ntomp -deffnm $1
+mpirun gmx_mpi mdrun -ntomp $ntomp -deffnm $1
