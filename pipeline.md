@@ -38,7 +38,8 @@ gmx solvate -cp glycerol_box -cs tip4p -o glycerol_solv.gro -p topol.top -maxsol
 
 > Energy minimisation - preprocess, run and analyse results
  ```bash
-gmx grompp -f mdp/min.mdp -c glycerol_solv.gro -p topol.top -o em.tpr 
+# gmx grompp -f mdp/min.mdp -c glycerol_solv.gro -p topol.top -o em.tpr 
+sbatch slurm/cuda_gromp.sh mdp/min.mdp glycerol_solv.gro em.tpr 
 sbatch slurm/cuda.sh em 
 gmx energy -f em.edr -o em_potential.xvg
  ```
