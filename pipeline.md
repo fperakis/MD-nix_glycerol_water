@@ -23,9 +23,33 @@ http://mackerell.umaryland.edu/charmm_ff.shtml
 nix-shell -p qchem-unstable.gromacs 
  ```
  
+ 
+> make topology file (topol.top)
+ ```bash
+
+; Include forcefield parameters
+#include "charmm36-jul2021.ff/forcefield.itp"
+
+; Include glycerol topology and parameters
+#include "molecules/glycerol.itp"
+
+; Include water topology
+#include "charmm36-jul2021.ff/tip4p2005.itp"
+
+[ system ]
+; Name
+glycerol
+
+[ molecules ]
+; Compound        #mols
+glycerol         320
+
+ ```
+
+ 
 > Make simulation box: insert glycerols, solvate (after this step check topology file - may need to add a new line after SOL)
  ```bash
-gmx insert-molecules -ci mol/glyc.pdb -nmol 320 -box 10 10 10 -o glycerol_box.gro
+gmx insert-molecules -ci molecules/glycerol.pdb -nmol 320 -box 10 10 10 -o glycerol_box.gro
 gmx solvate -cp glycerol_box -cs tip4p -o glycerol_solv.gro -p topol.top -maxsol 9680
  ```
 
