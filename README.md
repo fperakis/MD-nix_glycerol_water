@@ -44,9 +44,10 @@ $ sbatch slurm/cuda md_0_1
 check status
 ```bash
 $ squeue -u username
+$ squeue -p ampere -S +i -o "%7i %8u %4P %30j %2t %10R %10b"
 ```
 
 check GPU status
 ```bash
-srun --jobid=<jobid> nvidia-smi
+$ srun --jobid=<jobid> nvidia-smi
 ```
