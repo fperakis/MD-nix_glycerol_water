@@ -45,3 +45,8 @@ check status
 ```bash
 $ squeue -u username
 ```
+
+check GPU status
+```bash
+srun --jobid=<jobid> nvidia-smi
+```
