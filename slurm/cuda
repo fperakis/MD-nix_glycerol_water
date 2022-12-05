@@ -5,12 +5,12 @@
 #SBATCH -n 6
 
 # Number of threads per task
-#SBATCH -c 1
+#SBATCH -c 8
 
 # requested number of GPUs
-#SBATCH --gres gpu:a100:1
+#SBATCH --gres gpu:a100:2
 #SBATCH -p ampere
-#SBATCH -J gromacs
+#SBATCH -J md_260K
 #SBATCH -t 2-00:00  # time limit: (D-HH:MM) 
 #SBATCH -o mdf/slurm-%j.out
 
@@ -18,6 +18,7 @@
 ## n x c = 48 (running on a single node)
 # Best load is 6 tasks per GPU
 # e.g.: -n6 --gres gpu:a100:1
+
 
 # Automatic selection of ntomp argument based on "-c" argument to sbatch
 if [ -n "$SLURM_CPUS_PER_TASK" ]; then
@@ -34,4 +35,4 @@ export OMP_NUM_THREADS=$ntomp
 # gmx mdrun -ntomp $ntomp -deffnm em
 
 # for multi task
-mpirun gmx_mpi mdrun -ntomp $ntomp -deffnm mdf/npt
+mpirun gmx_mpi mdrun $ntmpi -ntomp $ntomp -deffnm mdf/md_260K
