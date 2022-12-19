@@ -1,10 +1,10 @@
 #!/usr/bin/env nix-shell
-#!nix-shell -i bash path_to_nix_files/cpu.nix
+#! nix-shell -i bash /cfs/home/fpera/gmx_simulations/nix_files/cpu.nix
 #
-#SBATCH -n64
+#SBATCH -n 64
 #SBATCH -pcops
 #SBATCH -Jgromacs
-#SBATCH -c 2
+#SBATCH -c 1
 #
 #nix-sdist `which gmx_mpi`
 
@@ -21,4 +21,4 @@ fi
 # # to avoid complaints from GROMACS
  export OMP_NUM_THREADS=$ntomp
 
-mpirun gmx_mpi mdrun -ntomp $ntomp -deffnm md_0_1
+mpirun gmx_mpi mdrun -ntomp $ntomp -deffnm mdf/md_230K

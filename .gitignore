@@ -1,8 +1,13 @@
 # Jupyter Notebook
 .ipynb_checkpoints
+._analysis.ipynb
 
 # bash jobs output files
 .out
 
 # md files
 mdf/*
+
+# mac files
+._.DS_Store
+.DS_Store

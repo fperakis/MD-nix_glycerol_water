@@ -1,15 +1,10 @@
 #!/usr/bin/env nix-shell
-#! nix-shell -i bash /cfs/home/fpera/gmx_simulations/nix_files/cuda.nix
-
-# Number of tasks
+#! nix-shell -i bash /cfs/home/fpera/gmx_simulations/nix_files/cpu.nix
+#
 #SBATCH -n 1
-
-# Number of threads per task
+#SBATCH -pcops
+#SBATCH -Jgromacs
 #SBATCH -c 1
-
-# requested number of GPUs
-#SBATCH --gres gpu:a100:1
-#SBATCH -p ampere
 #SBATCH -J gromacs
 #SBATCH -t 0-01:00  # time limit: (D-HH:MM) 
 #SBATCH -o mdf/slurm-%j.out
@@ -35,5 +30,4 @@ export OMP_NUM_THREADS=$ntomp
 #mpirun gmx_mpi grompp -f mdp/npt.mdp -c mdf/nvt.gro -r mdf/nvt.gro -t mdf/nvt.cpt -p mdf/topol.top -o mdf/npt.tpr
 
 #md
-#mpirun gmx_mpi grompp -f mdp/md.mdp -c mdf/npt.gro -t mdf/npt.cpt -p mdf/topol.top -o mdf/md_0_2.tpr -po mdf/md_0_2.mdp
-mpirun gmx_mpi grompp -f mdp/md.mdp -c mdf/md_0_1.gro -t mdf/md_0_1.cpt -p mdf/topol.top -o mdf/md_260K.tpr -po mdf/md_260K.mdp
+mpirun gmx_mpi grompp -f mdp/md.mdp -c mdf/md_0_1.gro -t mdf/md_0_1.cpt -p mdf/topol.top -o mdf/md_230K.tpr -po mdf/md_230K.mdp
