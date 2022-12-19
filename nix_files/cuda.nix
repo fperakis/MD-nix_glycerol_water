@@ -13,6 +13,7 @@ let
       };
     };
     overlays = [
+      (self: super: { cudatoolkit = super.cudatoolkit_11; })
       (import "${overlay}/overlays/cuda.nix")
       (import "${overlay}/overlay.nix")
     ];
