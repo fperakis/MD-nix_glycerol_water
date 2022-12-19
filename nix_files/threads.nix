@@ -1,8 +1,9 @@
 {} :
 
 let
-  nixpkgs = builtins.fetchTarball "https://github.com/NixOS/nixpkgs/archive/25e036ff5d2c9cd9382bbb1bbe0d929950c1449f.tar.gz";
-  overlay = builtins.fetchTarball "https://github.com/markuskowa/NixOS-QChem/archive/d9c72e7b6c1f63c2a67fc28e94450d0b41e7e793.tar.gz";
+  v = import ./versions.nix;
+  nixpkgs = builtins.fetchTarball "https://github.com/NixOS/nixpkgs/archive/${v.nixpkgs}.tar.gz";
+  overlay = builtins.fetchTarball "https://github.com/markuskowa/NixOS-QChem/archive/${v.qchem}.tar.gz";
 
   pkgs = import nixpkgs {
     config = {
@@ -12,7 +13,6 @@ let
       };
     };
     overlays = [
-      (self: super: { cudatoolkit = super.cudatoolkit_11; })
       (import "${overlay}/overlay.nix")
     ];
   };
@@ -20,7 +20,8 @@ let
 
 in pkgs.mkShell {
   buildInputs = with pkgs; [
-    qchem.gromacsMpi
+    # OpenMP only version (no MPI)
+    qchem.gromacs
   ];
 
   shellHook = ''
@@ -30,7 +31,7 @@ in pkgs.mkShell {
       export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK
     fi
 
-    export GMX=gmx_mpi
+    export GMX=gmx
   '';
 }
 
