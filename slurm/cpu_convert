@@ -20,14 +20,5 @@ fi
 # to avoid complaints from GROMACS
 export OMP_NUM_THREADS=$ntomp
 
-# em 
-#mpirun gmx_mpi grompp -f mdp/min.mdp -c mdf/glycerol_solv.gro -p mdf/topol.top -o mdf/em.tpr -po mdf/mdout.mdp 
-
-# nvt 
-#mpirun gmx_mpi grompp -f mdp/nvt.mdp -c mdf/em.gro -r mdf/em.gro -p mdf/topol.top -o mdf/nvt.tpr
-
-# npt 
-#mpirun gmx_mpi grompp -f mdp/npt.mdp -c mdf/nvt.gro -r mdf/nvt.gro -t mdf/nvt.cpt -p mdf/topol.top -o mdf/npt.tpr
-
-#md
-mpirun gmx_mpi grompp -f mdp/md.mdp -c mdf/md_0_1.gro -t mdf/md_0_1.cpt -p mdf/topol.top -o mdf/md_270K.tpr -po mdf/md_270K.mdp
+# extend simulation (by 100ns)
+mpirun gmx_mpi convert-tpr -s mdf/md_220K.tpr -extend 100000 -o mdf/md_220K.tpr

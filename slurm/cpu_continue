@@ -1,11 +1,10 @@
 #!/usr/bin/env nix-shell
-#! nix-shell -i bash /cfs/home/fpera/gmx_simulations/nix_files/cpu.nix
+#!nix-shell -i bash /cfs/home/fpera/gmx_simulations/15_water_glyc/MD-nix_glycerol_water/nix_files/cpu.nix
 #
 #SBATCH -n 64
-#SBATCH -pcops
-#SBATCH -Jgromacs
-#SBATCH -c 1
-#SBATCH -o mdf/slurm-%j.out
+#SBATCH -p cops
+#SBATCH -J gromacs
+#SBATCH -c 2
 #
 #nix-sdist `which gmx_mpi`
 
@@ -22,4 +21,5 @@ fi
 # # to avoid complaints from GROMACS
  export OMP_NUM_THREADS=$ntomp
 
-mpirun gmx_mpi mdrun -ntomp $ntomp -deffnm mdf/md_270K
+# continue simulation (after running cpu_convert)
+mpirun gmx_mpi mdrun -ntomp $ntomp -s mdf/md_220K.tpr -cpi mdf/md_220K.cpt -deffnm mdf/md_220K
