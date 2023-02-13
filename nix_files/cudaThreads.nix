@@ -28,7 +28,7 @@ let
 in pkgs.mkShell {
   buildInputs = with pkgs; [
     # CUDA MPI version
-    nixGL qchem.gromacsCudaMpi
+    nixGL (qchem.gromacs.override { enableCuda = true; })
   ];
 
   shellHook = ''
